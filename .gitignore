@@ -1,0 +1,125 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Виртуальное окружение
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Чувствительные данные 
+.env
+*.env
+
+# Allure отчёты 
+allure-results/
+allure-report/
+
+# Pytest кэш
+.pytest_cache/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Виртуальное окружение
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Чувствительные данные 
+.env
+*.env
+
+# Allure отчёты 
+allure-results/
+allure-report/
+
+# Pytest кэш
+.pytest_cache/
+
+# Бинарные файлы драйверов (КРИТИЧНО по заданию!)
+chromedriver
+chromedriver.exe
+geckodriver
+geckodriver.exe
+msedgedriver
+msedgedriver.exe
+
+# Отладочные файлы от тестов
+debug_*.png
+debug_*.html
+*.log
+
+# Файлы сборки
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+allure-results/
+allure-report/
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Testing
+.pytest_cache/
+allure-results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Debug files
+debug_*.png
+debug_*.jpg
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
