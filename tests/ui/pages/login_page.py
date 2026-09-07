@@ -20,7 +20,6 @@ class LoginPage(BasePage):
         """Открыть страницу входа"""
         print(f"🌐 Открываем страницу: {self.LOGIN_URL}")
         self.driver.get(self.LOGIN_URL)
-        # Явное ожидание загрузки DOM (вместо time.sleep)
         WebDriverWait(self.driver, 10).until(
             lambda d: d.execute_script(
                 "return document.readyState") == "complete"
@@ -28,13 +27,14 @@ class LoginPage(BasePage):
 
     def login(self, email: str, password: str) -> None:
         """Войти в систему (или пропустить, если уже вошли)"""
-        print(f"🔐 Проверяем необходимость входа...")
+        print("🔐 Проверяем необходимость входа...")
 
         try:
-            # Ждём поле email (максимум 3 секунды). Если его нет, значит мы уже внутри.
             email_field = WebDriverWait(self.driver, 3).until(
                 EC.presence_of_element_located(
-                    (By.CSS_SELECTOR, "input[type='email'], input[name='email']"))
+                    (By.CSS_SELECTOR,
+                     "input[type='email'], input[name='email']")
+                )
             )
             print("📝 Поле логина найдено, выполняем вход.")
 
@@ -44,7 +44,9 @@ class LoginPage(BasePage):
 
             password_field = WebDriverWait(self.driver, 5).until(
                 EC.presence_of_element_located(
-                    (By.CSS_SELECTOR, "input[placeholder='Введите пароль'], input[type='password']"))
+                    (By.CSS_SELECTOR,
+                     "input[placeholder='Введите пароль'], input[type='password']")
+                )
             )
 
             ActionChains(self.driver).click(password_field).perform()
@@ -54,12 +56,16 @@ class LoginPage(BasePage):
             password_field.send_keys(Keys.ENTER)
             print("✅ Enter нажат для входа")
 
-            # Явное ожидание исчезновения поля логина (признак успешного входа)
             WebDriverWait(self.driver, 10).until(
                 EC.invisibility_of_element_located(
-                    (By.CSS_SELECTOR, "input[type='email'], input[name='email']"))
+                    (By.CSS_SELECTOR,
+                     "input[type='email'], input[name='email']")
+                )
             )
             print("🎉 Вход выполнен!")
 
         except TimeoutException:
-            print("✅ Мы уже авторизованы, пропускаем ввод логина и пароля.")
+            print(
+                "✅ Мы уже авторизованы, "
+                "пропускаем ввод логина и пароля."
+            )

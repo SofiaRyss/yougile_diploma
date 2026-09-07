@@ -28,8 +28,10 @@ class TestLogin:
             current_url = browser.current_url
             print(f"\n Текущий URL: {current_url}")
 
-            assert "team" in current_url.lower() or "board" in current_url.lower(), \
-                f"Мы всё ещё на странице входа. URL: {current_url}"
+            assert (
+                "team" in current_url.lower()
+                or "board" in current_url.lower()
+            ), f"Мы всё ещё на странице входа. URL: {current_url}"
 
             print(f"✅ Успешный вход! Мы внутри системы. URL: {current_url}")
 
@@ -50,15 +52,19 @@ class TestCreateTask:
 
         with allure.step("Открыть доску и создать задачу"):
             board_page = BoardPage(
-                browser, "https://ru.yougile.com/team/bc85143db2e5/Проект-ДЗ-София")
+                browser,
+                "https://ru.yougile.com/team/bc85143db2e5/"
+                "Проект-ДЗ-София"
+            )
             board_page.open_board()
 
             task_name = f"Тестовая задача {time.strftime('%H%M%S')}"
             board_page.create_task(task_name)
 
         with allure.step("Проверить, что задача создана"):
-            assert board_page.is_task_exists(
-                task_name), f"Задача '{task_name}' не была создана"
+            assert board_page.is_task_exists(task_name), (
+                f"Задача '{task_name}' не была создана"
+            )
             print(f"\n✅ Задача успешно создана: {task_name}")
 
 
@@ -77,15 +83,19 @@ class TestMoveTask:
             login_page.login(YOUGILE_LOGIN, YOUGILE_PASSWORD)
 
             board_page = BoardPage(
-                browser, "https://ru.yougile.com/team/bc85143db2e5/Проект-ДЗ-София")
+                browser,
+                "https://ru.yougile.com/team/bc85143db2e5/"
+                "Проект-ДЗ-София"
+            )
             board_page.open_board()
 
         with allure.step("Переместить задачу в колонку 'Первая'"):
             board_page.move_task("Тестовая задача 122028", "Первая")
 
         with allure.step("Проверить, что задача находится в колонке 'Первая'"):
-            assert board_page.is_task_in_column("Тестовая задача 122028", "Первая"), \
-                "Задача не найдена в колонке 'Первая' после перемещения!"
+            assert board_page.is_task_in_column(
+                "Тестовая задача 122028", "Первая"
+            ), "Задача не найдена в колонке 'Первая' после перемещения!"
             print("\n✅ Задача успешно перемещена в колонку 'Первая'!")
 
 
@@ -104,16 +114,20 @@ class TestAddComment:
             login_page.login(YOUGILE_LOGIN, YOUGILE_PASSWORD)
 
             board_page = BoardPage(
-                browser, "https://ru.yougile.com/team/bc85143db2e5/Проект-ДЗ-София")
+                browser,
+                "https://ru.yougile.com/team/bc85143db2e5/"
+                "Проект-ДЗ-София"
+            )
             board_page.open_board()
 
         with allure.step("Добавить комментарий к задаче"):
             comment_text = f"Тестовый комментарий {time.strftime('%H%M%S')}"
             board_page.add_comment_to_task(
-                "Тестовая задача 122028", comment_text)
+                "Тестовая задача 122028", comment_text
+            )
 
         with allure.step("Проверить результат"):
-            print(f"\n✅ Тест добавления комментария успешно пройден!")
+            print("\n✅ Тест добавления комментария успешно пройден!")
 
 
 @allure.feature("UI Тестирование YouGile")
@@ -131,21 +145,27 @@ class TestDeleteTask:
             login_page.login(YOUGILE_LOGIN, YOUGILE_PASSWORD)
 
             board_page = BoardPage(
-                browser, "https://ru.yougile.com/team/bc85143db2e5/Проект-ДЗ-София")
+                browser,
+                "https://ru.yougile.com/team/bc85143db2e5/"
+                "Проект-ДЗ-София"
+            )
             board_page.open_board()
 
         with allure.step("Создать задачу для удаления"):
             task_to_delete = f"Задача для удаления {time.strftime('%H%M%S')}"
             board_page.create_task(task_to_delete)
 
-            assert board_page.is_task_exists(task_to_delete), \
+            assert board_page.is_task_exists(task_to_delete), (
                 f"Задача '{task_to_delete}' не была создана"
+            )
             print(f"✅ Задача '{task_to_delete}' создана и готова к удалению")
 
         with allure.step("Удалить задачу и проверить результат"):
             board_page.delete_task(task_to_delete)
 
-            assert not board_page.is_task_exists(task_to_delete), \
-                f"Задача '{task_to_delete}' всё ещё присутствует на доске после удаления!"
+            assert not board_page.is_task_exists(task_to_delete), (
+                f"Задача '{task_to_delete}' всё ещё "
+                f"присутствует на доске после удаления!"
+            )
 
-            print(f"\n✅ Тест удаления задачи успешно пройден!")
+            print("\n✅ Тест удаления задачи успешно пройден!")

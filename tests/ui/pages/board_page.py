@@ -1,6 +1,5 @@
 """Страница доски задач YouGile."""
 
-from typing import Any
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -14,20 +13,15 @@ class BoardPage(BasePage):
     """Page Object для доски задач YouGile."""
 
     def __init__(self, driver: WebDriver, board_url: str) -> None:
-        """Инициализация страницы доски."""
         super().__init__(driver)
         self.board_url = board_url
 
     def open_board(self) -> None:
         """Открыть доску задач."""
         self.driver.get(self.board_url)
-
-        # Явное ожидание: ждем либо кнопку "Добавить задачу", либо заголовок доски.
-        # 20 секунд - безопасный запас для "холодного" старта приложения.
-        WebDriverWait(self.driver, 20).until(
+        WebDriverWait(self.driver, 15).until(
             EC.presence_of_element_located(
-                (By.XPATH,
-                 "//*[contains(text(), 'Добавить задачу')] | //*[contains(text(), 'Проект-ДЗ-София')]")
+                (By.XPATH, "//*[contains(text(), 'Добавить задачу')]")
             )
         )
 
@@ -53,7 +47,6 @@ class BoardPage(BasePage):
         )
 
     def is_task_exists(self, task_name: str) -> bool:
-        """Проверить существование задачи на доске."""
         try:
             WebDriverWait(self.driver, 5).until(
                 EC.presence_of_element_located(
@@ -65,11 +58,11 @@ class BoardPage(BasePage):
             return False
 
     def is_task_in_column(self, task_name: str, column_name: str) -> bool:
-        """Проверить, что задача находится в указанной колонке."""
         try:
             xpath = (
                 f"//*[contains(text(), '{column_name}')]"
-                f"/ancestor::div[contains(@class, 'column') or contains(@class, 'board')][1]"
+                f"/ancestor::div[contains(@class, 'column') "
+                f"or contains(@class, 'board')][1]"
                 f"//*[contains(text(), '{task_name}')]"
             )
             WebDriverWait(self.driver, 5).until(
@@ -80,7 +73,6 @@ class BoardPage(BasePage):
             return False
 
     def move_task(self, task_name: str, target_column_name: str) -> None:
-        """Переместить задачу в другую колонку."""
         task_card = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(
                 (By.XPATH, f"//*[contains(text(), '{task_name}')]")
@@ -96,7 +88,8 @@ class BoardPage(BasePage):
 
         move_button = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, "div.task-info__move-to-board"))
+                (By.CSS_SELECTOR, "div.task-info__move-to-board")
+            )
         )
         self.driver.execute_script("arguments[0].click();", move_button)
 
@@ -106,11 +99,9 @@ class BoardPage(BasePage):
             )
         )
         self.driver.execute_script("arguments[0].click();", target_column)
-
         self.driver.find_element(By.TAG_NAME, "body").send_keys(Keys.ESCAPE)
 
     def add_comment_to_task(self, task_name: str, comment_text: str) -> None:
-        """Добавить комментарий к задаче."""
         task_card = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(
                 (By.XPATH, f"//*[contains(text(), '{task_name}')]")
@@ -126,13 +117,12 @@ class BoardPage(BasePage):
 
         comment_input = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
-                (By.CSS_SELECTOR, "div.ck-editor__editable_inline"))
+                (By.CSS_SELECTOR, "div.ck-editor__editable_inline")
+            )
         )
         self.driver.execute_script(
-            """
-            arguments[0].innerHTML = arguments[1];
-            arguments[0].dispatchEvent(new Event('input', {bubbles: true}));
-            """,
+            "arguments[0].innerHTML = arguments[1]; "
+            "arguments[0].dispatchEvent(new Event('input', {bubbles: true}));",
             comment_input,
             comment_text,
         )
@@ -140,27 +130,26 @@ class BoardPage(BasePage):
         self.driver.find_element(By.TAG_NAME, "body").send_keys(Keys.ESCAPE)
 
     def delete_task(self, task_name: str) -> None:
-        """Удалить задачу с доски."""
         task_card = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (By.XPATH, f"//*[contains(text(), '{task_name}')]")
             )
         )
-
         ActionChains(self.driver).move_to_element(task_card).perform()
 
         menu_button = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, "[data-testid='board-task-menu']"))
+                (By.CSS_SELECTOR, "[data-testid='board-task-menu']")
+            )
         )
         self.driver.execute_script("arguments[0].click();", menu_button)
 
         delete_item = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, "[data-testid='menu-item-delete']"))
+                (By.CSS_SELECTOR, "[data-testid='menu-item-delete']")
+            )
         )
         self.driver.execute_script("arguments[0].click();", delete_item)
-
         self.driver.find_element(By.TAG_NAME, "body").send_keys(Keys.ENTER)
 
         WebDriverWait(self.driver, 10).until(
